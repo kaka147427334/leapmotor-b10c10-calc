@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>零跑 B10/C10 同城同商测算一页纸</title>
+<style>
+:root {
+  --bg: #F7F9FC;
+  --card: #FFFFFF;
+  --dark: #0A1F2E;
+  --teal: #00A4A6;
+  --teal-light: #E6F7F7;
+  --orange: #FF6B2C;
+  --orange-light: #FFF0E8;
+  --red: #E8392B;
+  --green: #0EA55F;
+  --blue: #2B6CB0;
+  --blue-light: #E8F0F8;
+  --gold: #F5A623;
+  --gold-light: #FFF8E8;
+  --gray: #64748B;
+  --border: #E2E8F0;
+  --shadow: 0 4px 16px rgba(10,31,46,0.06);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: var(--bg); color: var(--dark); line-height: 1.6;
+}
+.container { max-width: 1280px; margin: 0 auto; padding: 24px 20px 40px; }
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, var(--dark) 0%, #0D2E3F 55%, var(--teal) 150%);
+  color: white; border-radius: 16px; padding: 32px; margin-bottom: 24px;
+  box-shadow: var(--shadow); position: relative; overflow: hidden;
+}
+.hero::after {
+  content:''; position: absolute; right:-40px; top:-40px; width:220px; height:220px;
+  background: radial-gradient(circle, rgba(255,107,44,0.18) 0%, transparent 70%);
+}
+.hero h1 { font-size: 26px; font-weight: 900; position: relative; z-index: 1; }
+.hero .sub { font-size: 14px; opacity: 0.85; margin-top: 8px; position: relative; z-index: 1; }
+.hero-tags { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; position: relative; z-index: 1; }
+.hero-tag { background: rgba(255,255,255,0.15); padding: 5px 12px; border-radius: 20px; font-size: 13px; }
+
+/* Section title */
+.section-title { font-size: 18px; font-weight: 800; margin: 32px 0 16px; display: flex; align-items: center; gap: 10px; }
+.section-title span { font-size: 14px; color: var(--gray); font-weight: 500; }
+
+/* Cards */
+.card {
+  background: var(--card); border-radius: 14px; box-shadow: var(--shadow);
+  border: 1px solid var(--border); padding: 22px; margin-bottom: 16px;
+}
+.card .note { font-size: 13px; color: var(--gray); margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border); }
+
+/* Rule grid */
+.rule-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+@media (max-width: 900px) { .rule-grid { grid-template-columns: 1fr; } }
+.rule-item {
+  border: 1px solid var(--border); border-radius: 12px; padding: 16px; background: #FAFBFC;
+}
+.rule-item h4 { font-size: 14px; font-weight: 800; margin-bottom: 8px; color: var(--dark); }
+.rule-item p { font-size: 13px; color: var(--gray); }
+.rule-item .big { font-size: 24px; font-weight: 900; color: var(--orange); margin: 6px 0 2px; }
+.rule-item .unit { font-size: 12px; color: var(--gray); }
+
+/* Formula */
+.formula-box {
+  background: var(--teal-light); border-radius: 12px; padding: 16px 20px;
+  font-size: 14px; color: var(--dark); line-height: 2;
+}
+.formula-box code {
+  background: white; padding: 2px 8px; border-radius: 6px; font-family: 'SF Mono', Consolas, monospace;
+  font-size: 13px; color: var(--teal);
+}
+
+/* Table */
+.table-wrap { overflow-x: auto; border-radius: 14px; box-shadow: var(--shadow); }
+table { width: 100%; border-collapse: collapse; font-size: 12px; background: var(--card); }
+th, td { padding: 8px 6px; text-align: center; border: 1px solid var(--border); }
+th { background: var(--teal-light); color: var(--teal); font-weight: 700; white-space: nowrap; }
+th.group { background: #0A1F2E; color: white; font-weight: 800; }
+th.sub { background: #E2E8F0; color: var(--dark); font-weight: 700; }
+td.name { text-align: left; font-weight: 800; min-width: 120px; white-space: nowrap; }
+td.num { font-variant-numeric: tabular-nums; }
+td.rebate { font-weight: 800; color: var(--orange); font-variant-numeric: tabular-nums; }
+
+.t1 { background: #FFF6F5; }
+.t2 { background: #FFFAF3; }
+.t3 { background: #FFFDF0; }
+.t4 { background: #F4FFF9; }
+.t5 { background: #F3FAFF; }
+.t6 { background: #F5FFF5; }
+
+/* Insights */
+.insight-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 16px 0; }
+@media (max-width: 900px) { .insight-grid { grid-template-columns: repeat(2, 1fr); } }
+.insight-card {
+  background: var(--card); border-radius: 12px; padding: 18px; box-shadow: var(--shadow);
+  border: 1px solid var(--border); text-align: center;
+}
+.insight-card .num { font-size: 28px; font-weight: 900; color: var(--orange); }
+.insight-card .label { font-size: 12px; color: var(--gray); margin-top: 4px; }
+
+/* Update section */
+.update-box {
+  background: var(--blue-light); border-radius: 12px; padding: 18px 20px;
+  color: var(--dark); font-size: 14px;
+}
+.update-box h3 { font-size: 15px; font-weight: 800; margin-bottom: 10px; color: var(--blue); }
+.update-box ol { margin-left: 18px; }
+.update-box li { margin: 6px 0; }
+
+/* Ranking */
+.rank-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+@media (max-width: 900px) { .rank-grid { grid-template-columns: 1fr; } }
+.rank-card { background: var(--card); border-radius: 12px; padding: 18px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+.rank-card h4 { font-size: 14px; font-weight: 800; margin-bottom: 12px; color: var(--dark); }
+.rank-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed var(--border); font-size: 13px; }
+.rank-item:last-child { border-bottom: none; }
+.rank-item .val { font-weight: 800; font-variant-numeric: tabular-nums; }
+.rank-badge { display: inline-flex; width: 22px; height: 22px; border-radius: 50%; background: var(--gold-light); color: #B76E00; font-size: 11px; font-weight: 900; align-items: center; justify-content: center; margin-right: 8px; }
+
+.footer { text-align: center; padding: 30px 0 10px; font-size: 12px; color: var(--gray); }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="hero">
+    <h1>零跑 B10/C10 同城同商测算一页纸</h1>
+    <div class="sub">11-25号打榜系数 A 对应档位测算 · 按锁单内占比（B10 13% / C10 17%）· 锁单100%交付测算</div>
+    <div class="hero-tags">
+      <div class="hero-tag">📅 数据截至 2026-10-11</div>
+      <div class="hero-tag">🚗 B10 基准 1200元/台 · 占比13%</div>
+      <div class="hero-tag">🚙 C10 基准 1500元/台 · 占比17%</div>
+      <div class="hero-tag">🔁 系数 A = 11-25日均 ÷ 1-10日均</div>
+    </div>
+  </div>
+
+  <!-- 一、测算规则 -->
+  <div class="section-title">一、测算规则 <span>放最前面 · 每天更新只用改底表数字</span></div>
+  <div class="card">
+    <div class="rule-grid">
+      <div class="rule-item">
+        <h4>1. B10 单台奖励</h4>
+        <div class="big">1200</div>
+        <div class="unit">元/台 × 对应系数</div>
+        <p style="margin-top:8px;">按锁单内占比 <b>13%</b> 测算</p>
+      </div>
+      <div class="rule-item">
+        <h4>2. C10 单台奖励</h4>
+        <div class="big">1500</div>
+        <div class="unit">元/台 × 对应系数</div>
+        <p style="margin-top:8px;">按锁单内占比 <b>17%</b> 测算</p>
+      </div>
+      <div class="rule-item">
+        <h4>3. 系数 A</h4>
+        <div class="big">A</div>
+        <div class="unit">= 11-25号日均锁单 ÷ 1-10号日均锁单</div>
+        <p style="margin-top:8px;">按 A 落入档位确定返利系数 0.5 ~ 1.0</p>
+      </div>
+    </div>
+
+    <div class="formula-box" style="margin-top:18px;">
+      <b>测算公式（供核对 / 每日重算）：</b><br>
+      <code>11-25号锁单量</code> = ROUNDUP(<code>1-10号锁单量 × 系数 A 下限</code>)<br>
+      <code>B10台数</code> = ROUND(<code>11-25号锁单量 × 13%</code>) &nbsp;&nbsp;|&nbsp;&nbsp;
+      <code>C10台数</code> = ROUND(<code>11-25号锁单量 × 17%</code>)<br>
+      <code>预计返利</code> = <code>B10台数 × 1200 × 档位系数</code> + <code>C10台数 × 1500 × 档位系数</code>
+    </div>
+
+    <div class="note">
+      说明：本页测算基于「锁单100%交付」假设；实际返利以零小跑（销服系统）锁单时间、最终交付时间以及同城同实控人合并口径为准。
+    </div>
+  </div>
+
+  <!-- 二、测算结果 -->
+  <div class="section-title">二、同城同商测算结果 <span>数据截至 2026-10-11 · 以 Excel 版本为准</span></div>
+
+  <div class="insight-grid">
+    <div class="insight-card">
+      <div class="num" id="storeCount">4</div>
+      <div class="label">统计商 / 门店数</div>
+    </div>
+    <div class="insight-card">
+      <div class="num" id="totalLock10">534</div>
+      <div class="label">1-10号锁单合计</div>
+    </div>
+    <div class="insight-card">
+      <div class="num" id="maxRebate">220,500</div>
+      <div class="label">≥100% 档 预计返利合计</div>
+    </div>
+    <div class="insight-card">
+      <div class="num">10/25</div>
+      <div class="label">打榜截止日</div>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table id="calcTable">
+      <thead>
+        <tr>
+          <th rowspan="2" class="group">商</th>
+          <th rowspan="2" class="group">1-10号<br>锁单</th>
+          <th colspan="2" class="t1">[50%,60%)<br>返利系数 0.5</th>
+          <th colspan="2" class="t2">[60%,70%)<br>返利系数 0.6</th>
+          <th colspan="2" class="t3">[70%,80%)<br>返利系数 0.7</th>
+          <th colspan="2" class="t4">[80%,90%)<br>返利系数 0.8</th>
+          <th colspan="2" class="t5">[90%,100%)<br>返利系数 0.9</th>
+          <th colspan="2" class="t6">≥100%<br>返利系数 1</th>
+        </tr>
+        <tr>
+          <th class="sub">对应锁单量</th><th class="sub">预计返利</th>
+          <th class="sub">对应锁单量</th><th class="sub">预计返利</th>
+          <th class="sub">对应锁单量</th><th class="sub">预计返利</th>
+          <th class="sub">对应锁单量</th><th class="sub">预计返利</th>
+          <th class="sub">对应锁单量</th><th class="sub">预计返利</th>
+          <th class="sub">对应锁单量</th><th class="sub">预计返利</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <!-- JS 填充 -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 三、冲刺参考 -->
+  <div class="section-title">三、冲刺参考 <span>按 ≥100% 档位排序 · 谁的量最大</span></div>
+  <div class="rank-grid">
+    <div class="rank-card">
+      <h4>🏆 各商 ≥100% 档 预计返利排名</h4>
+      <div id="rankRebate"></div>
+    </div>
+    <div class="rank-card">
+      <h4>📊 冲到 ≥100% 还需多少锁单</h4>
+      <div id="rankGap"></div>
+    </div>
+  </div>
+
+  <!-- 四、更新说明 -->
+  <div class="section-title">四、每日更新说明 <span>这一页放最前面 · 每天早上刷新</span></div>
+  <div class="update-box">
+    <h3>📝 每天怎么更新这页</h3>
+    <ol>
+      <li>从 Excel / 系统导出最新的 <b>1-10号锁单</b> 数据（每个"商"一行）。</li>
+      <li>打开本页 HTML 源码，找到 <code>&lt;script&gt;</code> 里的 <code>STORE_DATA</code> 数组。</li>
+      <li>把每个商的 <code>lock10</code> 和 6 个档位的 <code>lock</code> / <code>rebate</code> 改成最新值。</li>
+      <li>修改 <code>DATA_DATE</code> 为当天日期，保存并重新部署即可。</li>
+    </ol>
+    <p style="margin-top:12px;font-size:13px;color:var(--gray);">
+      提示：公式写在上面，可以直接在 Excel 里用 <code>ROUNDUP</code> / <code>ROUND</code> 复算，与本页结果一致。
+    </p>
+  </div>
+
+  <div class="footer">零跑汽车华南大区 · B10/C10 同城同商测算一页纸 · 数据截至 2026-10-11 · 以《1011政策测算和预估.xlsx》为准</div>
+</div>
+
+<script>
+// ============================================================
+// 每天更新：只改下面 STORE_DATA 和 DATA_DATE 即可
+// ============================================================
+const DATA_DATE = '2026-10-11';
+
+const TIERS = [
+  { label: '[50%,60%)',  min: 0.5, coef: 0.5 },
+  { label: '[60%,70%)',  min: 0.6, coef: 0.6 },
+  { label: '[70%,80%)',  min: 0.7, coef: 0.7 },
+  { label: '[80%,90%)',  min: 0.8, coef: 0.8 },
+  { label: '[90%,100%)', min: 0.9, coef: 0.9 },
+  { label: '≥100%',      min: 1.0, coef: 1.0 },
+];
+
+// 数据取自《1011政策测算和预估.xlsx》
+const STORE_DATA = [
+  {
+    name: '华跃-虎门', lock10: 58,
+    tiers: [ {lock:29,rebate:6150}, {lock:35,rebate:9000}, {lock:41,rebate:11550},
+             {lock:47,rebate:15360}, {lock:53,rebate:19710}, {lock:58,rebate:24600} ]
+  },
+  {
+    name: '东富-寮步', lock10: 164,
+    tiers: [ {lock:82,rebate:17100}, {lock:99,rebate:24660}, {lock:115,rebate:33600},
+             {lock:132,rebate:42720}, {lock:148,rebate:54270}, {lock:164,rebate:67200} ]
+  },
+  {
+    name: '东唐集团', lock10: 208,
+    tiers: [ {lock:104,rebate:21900}, {lock:125,rebate:30420}, {lock:146,rebate:42210},
+             {lock:167,rebate:54720}, {lock:188,rebate:69120}, {lock:208,rebate:84900} ]
+  },
+  {
+    name: '一维集团', lock10: 104,
+    tiers: [ {lock:52,rebate:10950}, {lock:63,rebate:15660}, {lock:73,rebate:20160},
+             {lock:84,rebate:27360}, {lock:94,rebate:34560}, {lock:104,rebate:43800} ]
+  },
+];
+
+function fmt(n) { return n.toLocaleString('zh-CN'); }
+
+function render() {
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+
+  let totalLock10 = 0;
+  const tierTotals = TIERS.map(() => ({ lock: 0, rebate: 0 }));
+
+  // 数据行
+  STORE_DATA.forEach(s => {
+    totalLock10 += s.lock10;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="name">${s.name}</td>
+      <td class="num" style="font-weight:800;">${s.lock10}</td>
+      ${s.tiers.map((t, i) => {
+        tierTotals[i].lock += t.lock;
+        tierTotals[i].rebate += t.rebate;
+        return `<td class="num">${t.lock}</td><td class="rebate">${fmt(t.rebate)}</td>`;
+      }).join('')}
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // 合计行
+  const totalRow = document.createElement('tr');
+  totalRow.style.background = '#0A1F2E';
+  totalRow.style.color = 'white';
+  totalRow.style.fontWeight = '800';
+  totalRow.innerHTML = `
+    <td style="text-align:left;">合计</td>
+    <td class="num">${totalLock10}</td>
+    ${tierTotals.map(t => `<td class="num">${t.lock}</td><td class="num" style="color:#F5A623;">${fmt(t.rebate)}</td>`).join('')}
+  `;
+  tbody.appendChild(totalRow);
+
+  // KPI
+  document.getElementById('storeCount').textContent = STORE_DATA.length;
+  document.getElementById('totalLock10').textContent = fmt(totalLock10);
+  document.getElementById('maxRebate').textContent = fmt(tierTotals[tierTotals.length - 1].rebate);
+
+  // 排名：≥100% 档返利
+  const sorted = [...STORE_DATA].sort((a, b) => b.tiers[5].rebate - a.tiers[5].rebate);
+  document.getElementById('rankRebate').innerHTML = sorted.map((s, i) => `
+    <div class="rank-item">
+      <span><span class="rank-badge">${i + 1}</span>${s.name}</span>
+      <span class="val" style="color:var(--orange);">${fmt(s.tiers[5].rebate)} 元</span>
+    </div>
+  `).join('');
+
+  // 冲刺参考：冲到 ≥100% 还需多少锁单（11-25号目标 = 1-10号锁单 × 1.0）
+  document.getElementById('rankGap').innerHTML = sorted.map(s => {
+    const target = Math.ceil(s.lock10 * 1.0);
+    return `
+      <div class="rank-item">
+        <span>${s.name}</span>
+        <span class="val" style="color:var(--teal);">11-25号需 <b>${target}</b> 台</span>
+      </div>
+    `;
+  }).join('') + `<div style="font-size:12px;color:var(--gray);margin-top:10px;">
+    说明：达到 ≥100% 意味着 11-25号锁单量需 ≥ 1-10号锁单量（同口径日均持平）。
+  </div>`;
+}
+
+render();
+</script>
+
+</body>
+</html>
